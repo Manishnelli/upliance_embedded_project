@@ -3,21 +3,21 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-// DS18B20 data pin
+
 #define ONE_WIRE_BUS 2
 
-// LED pins
+
 #define LOW_TEMP_LED     4   // Blue
 #define TARGET_TEMP_LED  16  // Yellow
 #define OVERHEAT_LED     17  // Red
 #define HEATER_LED        5  // Orange
 
-// Temperature thresholds
+
 const float TARGET_TEMP = 50.0;
 const float OVERHEAT_TEMP = 70.0;
 const float TOLERANCE = 1.0; // ±1°C
 
-// Blinking control
+
 bool heaterLedState = false;
 bool overheatLedState = false;
 unsigned long previousHeaterMillis = 0;
@@ -27,14 +27,14 @@ const long blinkInterval = 500;
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-// LCD at I2C address 0x27, 16x2
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 float lastTemp = 0;
 
 void setup() {
   Serial.begin(9600);
-  Wire.begin(21, 22);  // Important for ESP32 in Wokwi
+  Wire.begin(21, 22);  
   sensors.begin();
   lcd.begin(16, 2);
   lcd.backlight();
@@ -58,15 +58,15 @@ void loop() {
   Serial.print(temperatureC);
   Serial.println(" °C");
 
-  // Reset LEDs
+
   digitalWrite(LOW_TEMP_LED, LOW);
   digitalWrite(TARGET_TEMP_LED, LOW);
 
-  // Determine temperature state
+
   String statusMsg = "";
   String trendMsg = "";
 
-  // Determine trend
+  
   if (temperatureC > lastTemp + 0.2) {
     trendMsg = "Temp Rising";
   } else if (temperatureC < lastTemp - 0.2) {
@@ -121,10 +121,10 @@ void loop() {
   lcd.setCursor(0, 1);
   lcd.print(statusMsg);
 
-  // Print trend message to Serial and on second row if space
+ 
   Serial.println("Trend: " + trendMsg);
   lcd.setCursor(10, 1);
-  lcd.print(trendMsg.substring(0, 6)); // trim if needed
+  lcd.print(trendMsg.substring(0, 6)); 
 
   lastTemp = temperatureC;
   delay(200);
